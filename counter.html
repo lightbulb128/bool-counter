@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Counter</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    </head>
+    <body onresize="resized()" onkeydown="keydown(event)">
+        <div id="topSpace"></div>
+        <div id="container">
+            <div id="controls">
+                <div class="buttonContainer" onclick="buttonUndoClicked()">
+                    <span><i id="buttonUndo" class="iconButton bi bi-arrow-left"></i></span>
+                </div>
+                <div class="buttonContainer" onclick="buttonResetClicked()">
+                    <span><i id="buttonReset" class="iconButton bi bi-arrow-clockwise"></i></span>
+                </div>
+            </div>
+            <div id="numberDisplayContainer">
+                <div id="numberDisplayLeft" class="numberDisplay" onclick="numberDisplayClicked(true)">0</div>
+                <div id="numberDisplayRight" class="numberDisplay" onclick="numberDisplayClicked(false)">0</div>
+            </div>
+            <div id="historiesContainer">
+                <div id="histories" onclick="copyHistories()">
+            </div>
+            </div>
+        </div>
+    </body>
+    <style>
+        body {
+            background-color: black;
+            text-align: center;
+            color: white;
+        }
+        #container {
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+        .numberDisplay {
+            font-family: 'Consolas', monospace;
+            font-size: 4rem;
+            display: inline-block;
+            width: 12rem; 
+            height: 12rem;
+            line-height: 12rem;
+            text-align: center;
+            vertical-align: middle;
+            border-radius: 5rem;
+            cursor: pointer;
+            margin: 1rem;
+            border: black 5pt solid;
+            user-select: none;
+        }
+        #controls {
+            font-size: 2rem;
+        }
+        .margined-bi {
+            margin-left: 0.2em;
+            font-size: large;
+        }
+        .iconButton {
+            cursor: pointer;
+            margin: 0 auto;
+            line-height: 4rem;
+        }
+        #histories {
+            margin-top: 1rem;
+            cursor: pointer;
+            width: 80%;
+            display: inline-block;
+            text-align: left;
+        }
+        .numberDisplay.focused {
+            border: white 5pt solid;
+        }
+        .buttonContainer {
+            display: inline-block;
+            border-radius: 4em;
+            border: white 2pt solid;
+            margin-left: 0.3rem;
+            margin-right: 0.3rem;
+            width: 4rem; 
+            height: 4rem;
+        }
+    </style>
+    <script src="counter.js"></script>
+</html>
