@@ -1,6 +1,19 @@
 var counterLeft = 0;
 var counterRight = 0;
 var counterHistory = []
+var isMobile = false
+
+// get is mobile
+const urlParams = new URLSearchParams(window.location.search);
+let isMobileParam = urlParams.get('mobile')
+isMobile = isMobileParam === "1"
+
+// if is mobile, load "styles_mobile.ccs" else load "styles_desktop.css"
+var link = document.createElement('link');
+link.rel = 'stylesheet';
+link.type = 'text/css';
+link.href = isMobile ? 'styles_mobile.css' : 'styles_desktop.css';
+document.head.appendChild(link);
 
 var icons = [
     ['check-circle', 'x-circle'],
@@ -14,17 +27,32 @@ var icons = [
 ]
 var currentIcons = []
 
+var iconIndex = urlParams.get('icon')
+if (iconIndex == null) {
+    currentIcons = icons[Math.floor(Math.random() * icons.length)]
+} else {
+    iconIndex = parseInt(iconIndex)
+    if (iconIndex < 0 || iconIndex >= icons.length) {
+        currentIcons = icons[0]
+    } else {
+        currentIcons = icons[iconIndex]
+    }
+}
 
 const copyToClipboard = str => {
     if (navigator && navigator.clipboard && navigator.clipboard.writeText)
-      return navigator.clipboard.writeText(str);
+        return navigator.clipboard.writeText(str);
     return Promise.reject('The Clipboard API is not available.');
-  };
+};
 
 function resized() {
     let totalHeight = window.innerHeight;
     let containerHeight = document.getElementById("container").clientHeight;
-    document.getElementById("topSpace").style.height = ((totalHeight - containerHeight) / 2).toString() + "px"
+    if (!isMobile) {
+        document.getElementById("topSpace").style.height = ((totalHeight - containerHeight) / 2).toString() + "px"
+    } else {
+        document.getElementById("topSpace").style.height = ((totalHeight - containerHeight) / 8).toString() + "px"
+    }
 }
 
 function numberDisplayClicked(left) {
@@ -69,7 +97,11 @@ function buttonResetClicked() {
 function refreshHistories() {
     let h = ""
     counterHistory.forEach((p) => {
-        h += p ? ('<i class="margined-bi bi bi-' + currentIcons[0] + '"></i>') : ('<i class="margined-bi bi bi-' + currentIcons[1] + '"></i>')
+        h += p ? (
+            '<i class="history-icon margined-bi bi bi-' + currentIcons[0] + '"></i>'
+        ) : (
+            '<i class="history-icon margined-bi bi bi-' + currentIcons[1] + '"></i>'
+        )
     })
     document.getElementById("histories").innerHTML = h
 }
@@ -79,9 +111,11 @@ function copyHistories() {
     counterHistory.forEach((p) => {
         h += p ? "t" : "f"
     })
-    copyToClipboard(h)
-    
-    document.getElementById("histories").innerHTML = "Copied to clipboard."
+    copyToClipboard(h).then(() => {
+        document.getElementById("histories").innerHTML = "Copied to clipboard."
+    }).catch((err) => {
+        document.getElementById("histories").innerHTML = "Failed to copy to clipboard."
+    })
     setTimeout(() => {refreshHistories();}, 3000);
 }
 
@@ -131,6 +165,5 @@ function keydown(event) {
     }
 }
 
-currentIcons = icons[Math.floor(Math.random() * icons.length)]
 resized()
 setColors()
