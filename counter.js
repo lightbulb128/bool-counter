@@ -2,6 +2,8 @@ var counterLeft = 0;
 var counterRight = 0;
 var counterHistory = []
 var isMobile = false
+var iconIndex = 0
+var isDark = false
 
 // get is mobile
 const urlParams = new URLSearchParams(window.location.search);
@@ -29,15 +31,49 @@ var currentIcons = []
 
 var iconIndex = urlParams.get('icon')
 if (iconIndex == null) {
-    currentIcons = icons[Math.floor(Math.random() * icons.length)]
+    iconIndex = Math.floor(Math.random() * icons.length)
+    currentIcons = icons[iconIndex]
 } else {
     iconIndex = parseInt(iconIndex)
     if (iconIndex < 0 || iconIndex >= icons.length) {
+        iconIndex = 0
         currentIcons = icons[0]
     } else {
         currentIcons = icons[iconIndex]
     }
 }
+
+isDark = urlParams.get('dark') === "1"
+// load "styles_dark.css" if isDark is true else load "styles_light.css"
+link = document.createElement('link');
+link.rel = 'stylesheet';
+link.type = 'text/css';
+link.href = isDark ? 'styles_dark.css' : 'styles_light.css';
+document.head.appendChild(link);
+
+let linkContainer = document.getElementById("linkContainer")
+// add link to linkContainer to let user switch between dark and light mode
+function constructLink(dark, iconIndex) {
+    let link = window.location.href.split("?")[0]
+    if (dark) {
+        link += "?dark=1"
+    } else {
+        link += "?dark=0"
+    }
+    link += "&icon=" + iconIndex
+    return link
+}
+let switchDarkButton = document.getElementById("buttonSwitchDark")
+// switchDarkButton is an "a" element, so just set href
+switchDarkButton.href = constructLink(!isDark, iconIndex)
+switchDarkButton.innerHTML = "<i class='bi bi-" + (isDark ? "sun" : "moon") + "'></i>"
+
+let switchIconButton = document.getElementById("buttonSwitchIcon")
+switchIconButton.href = constructLink(isDark, (iconIndex + 1) % icons.length)
+switchIconButton.innerHTML = (
+    "<i class='buttonSwitchIcon bi bi-" + currentIcons[0] + "'></i>/" +
+    "<i class='buttonSwitchIcon bi bi-" + currentIcons[1] + "'></i>"
+)
 
 const copyToClipboard = str => {
     if (navigator && navigator.clipboard && navigator.clipboard.writeText)
@@ -48,11 +84,16 @@ const copyToClipboard = str => {
 function resized() {
     let totalHeight = window.innerHeight;
     let containerHeight = document.getElementById("container").clientHeight;
+    let height = 0
     if (!isMobile) {
-        document.getElementById("topSpace").style.height = ((totalHeight - containerHeight) / 2).toString() + "px"
+        height = (totalHeight - containerHeight) / 2
     } else {
-        document.getElementById("topSpace").style.height = ((totalHeight - containerHeight) / 8).toString() + "px"
+        height = (totalHeight - containerHeight) / 8
     }
+    let linkContainerHeight = linkContainer.clientHeight
+    height -= linkContainerHeight
+    if (height < 0) height = 0
+    document.getElementById("topSpace").style.height = height.toString() + "px"
 }
 
 function numberDisplayClicked(left) {
@@ -167,3 +208,5 @@ function keydown(event) {
 
 resized()
 setColors()
+
+setTimeout(() => {resized();}, 100);

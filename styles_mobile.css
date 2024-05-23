@@ -1,9 +1,5 @@
-
-
 body {
-    background-color: black;
     text-align: center;
-    color: white;
 }
 #container {
     margin-top: auto;
@@ -21,7 +17,6 @@ body {
     border-radius: 7rem;
     cursor: pointer;
     margin: 2rem;
-    border: black 5pt solid;
     user-select: none;
 }
 #controls {
@@ -50,15 +45,24 @@ body {
     display: inline-block;
     text-align: left;
 }
-.numberDisplay.focused {
-    border: white 5pt solid;
-}
 .buttonContainer {
     display: inline-block;
     border-radius: 4em;
-    border: white 2pt solid;
     margin-left: 0.3rem;
     margin-right: 0.3rem;
     width: 7rem; 
     height: 7rem;
+}
+.linkButton {
+    text-decoration: none;
+    display: inline-block;
+    line-height: 4rem;
+    height: 4rem;
+    text-align: center;
+    border-radius: 3rem;
+    font-size: 3rem;
+}
+.buttonSwitchIcon {
+    margin-right: 0.4em;
+    margin-left: 0.4em;
 }

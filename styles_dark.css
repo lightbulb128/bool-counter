@@ -1,0 +1,16 @@
+body {
+    background-color: black;
+    color: white;
+}
+.numberDisplay {
+    border: black 5pt solid;
+}
+.numberDisplay.focused {
+    border: white 5pt solid;
+}
+.buttonContainer {
+    border: white 2pt solid;
+}
+.linkButton {
+    color: white;
+}
