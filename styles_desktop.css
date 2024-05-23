@@ -55,7 +55,18 @@ body {
     border-radius: 1.5rem;
     font-size: 1.5rem;
 }
-.buttonSwitchIcon {
+.buttonSwitchIconLeft {
     margin-right: 0.2em;
+}
+.buttonSwitchIconRight {
     margin-left: 0.2em;
+}
+.linkContainerSeparator {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    font-size: 2rem;
+    display: inline-block;
+}
+#linkContainer {
+    line-height: 2em;
 }

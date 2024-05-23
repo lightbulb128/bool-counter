@@ -62,7 +62,18 @@ body {
     border-radius: 3rem;
     font-size: 3rem;
 }
-.buttonSwitchIcon {
+.buttonSwitchIconLeft {
     margin-right: 0.4em;
+}
+.buttonSwitchIconRight {
     margin-left: 0.4em;
+}
+.linkContainerSeparator {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    font-size: 4rem;
+    display: inline-block;
+}
+#linkContainer {
+    line-height: 4em;
 }

@@ -50,10 +50,21 @@ link.rel = 'stylesheet';
 link.type = 'text/css';
 link.href = isDark ? 'styles_dark.css' : 'styles_light.css';
 document.head.appendChild(link);
+let trueIcon = null;
+let falseIcon = null;
+
+if (urlParams.get('trueIcon') != null) {
+    currentIcons[0] = urlParams.get('trueIcon')
+    trueIcon = currentIcons[0]
+}
+if (urlParams.get('falseIcon') != null) {
+    currentIcons[1] = urlParams.get('falseIcon')
+    falseIcon = currentIcons[1]
+}
 
 let linkContainer = document.getElementById("linkContainer")
 // add link to linkContainer to let user switch between dark and light mode
-function constructLink(dark, iconIndex) {
+function constructLink(dark, iconIndex, mobile, noCustomIcons) {
     let link = window.location.href.split("?")[0]
     if (dark) {
         link += "?dark=1"
@@ -61,18 +72,35 @@ function constructLink(dark, iconIndex) {
         link += "?dark=0"
     }
     link += "&icon=" + iconIndex
+    if (mobile) {
+        link += "&mobile=1"
+    } else {
+        link += "&mobile=0"
+    }
+    if (!noCustomIcons) {
+        if (trueIcon != null) {
+            link += "&trueIcon=" + trueIcon
+        }
+        if (falseIcon != null) {
+            link += "&falseIcon=" + falseIcon
+        }
+    }
     return link
 }
+
+let switchMobileButton = document.getElementById("buttonSwitchMobile")
+switchMobileButton.href = constructLink(isDark, iconIndex, !isMobile)
+switchMobileButton.innerHTML = "<i class='bi bi-" + (isMobile ? "phone" : "display") + "'></i>"
+
 let switchDarkButton = document.getElementById("buttonSwitchDark")
-// switchDarkButton is an "a" element, so just set href
-switchDarkButton.href = constructLink(!isDark, iconIndex)
-switchDarkButton.innerHTML = "<i class='bi bi-" + (isDark ? "sun" : "moon") + "'></i>"
+switchDarkButton.href = constructLink(!isDark, iconIndex, isMobile)
+switchDarkButton.innerHTML = "<i class='bi bi-" + (isDark ? "moon" : "sun") + "'></i>"
 
 let switchIconButton = document.getElementById("buttonSwitchIcon")
-switchIconButton.href = constructLink(isDark, (iconIndex + 1) % icons.length)
+switchIconButton.href = constructLink(isDark, (iconIndex + 1) % icons.length, isMobile, true)
 switchIconButton.innerHTML = (
-    "<i class='buttonSwitchIcon bi bi-" + currentIcons[0] + "'></i>/" +
-    "<i class='buttonSwitchIcon bi bi-" + currentIcons[1] + "'></i>"
+    "<i class='buttonSwitchIconLeft bi bi-" + currentIcons[0] + "'></i>/" +
+    "<i class='buttonSwitchIconRight bi bi-" + currentIcons[1] + "'></i>"
 )
 
 const copyToClipboard = str => {
@@ -157,7 +185,7 @@ function copyHistories() {
     }).catch((err) => {
         document.getElementById("histories").innerHTML = "Failed to copy to clipboard."
     })
-    setTimeout(() => {refreshHistories();}, 3000);
+    setTimeout(() => {refreshHistories();}, 1500);
 }
 
 function getRandomHuedColor() {
