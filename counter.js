@@ -103,6 +103,25 @@ switchIconButton.innerHTML = (
     "<i class='buttonSwitchIconRight bi bi-" + currentIcons[1] + "'></i>"
 )
 
+let preservedHistory = ""
+if (urlParams.get("history") != null) {
+    preservedHistory = urlParams.get("history")
+} else if (document.cookie.indexOf("history=") != -1) {
+    preservedHistory = document.cookie.split("history=")[1].split(";")[0]
+}
+
+for (let i = 0; i < preservedHistory.length; i++) {
+    counterHistory.push(preservedHistory[i] == "t")
+    if (preservedHistory[i] == "t") {
+        counterLeft++
+    } else {
+        counterRight++
+    }
+}
+refreshHistories()
+document.getElementById("numberDisplayLeft").innerText = counterLeft.toString()
+document.getElementById("numberDisplayRight").innerText = counterRight.toString()
+
 const copyToClipboard = str => {
     if (navigator && navigator.clipboard && navigator.clipboard.writeText)
         return navigator.clipboard.writeText(str);
@@ -173,13 +192,20 @@ function refreshHistories() {
         )
     })
     document.getElementById("histories").innerHTML = h
+    // set a cookie
+    document.cookie = "history=" + getHistoryString() + "; expires=Fri, 31 Dec 9999 23:59:59 GMT"
 }
 
-function copyHistories() {
+function getHistoryString() {
     let h = ""
     counterHistory.forEach((p) => {
         h += p ? "t" : "f"
     })
+    return h
+}
+
+function copyHistories() {
+    let h = getHistoryString()
     copyToClipboard(h).then(() => {
         document.getElementById("histories").innerHTML = "Copied to clipboard."
     }).catch((err) => {
