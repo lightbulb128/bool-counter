@@ -110,6 +110,20 @@ if (urlParams.get("history") != null) {
     preservedHistory = document.cookie.split("history=")[1].split(";")[0]
 }
 
+// if "-" is in preservedHistory
+if (preservedHistory.indexOf("-") != -1) {
+    // preservedHistory is in form of "x-y"
+    let x = preservedHistory.split("-")[0]
+    let y = preservedHistory.split("-")[1]
+    x = parseInt(x)
+    y = parseInt(y)
+    x = x > 0 ? x : 0
+    y = y > 0 ? y : 0
+    x = x < 65536 ? x : 65536
+    y = y < 65536 ? y : 65536
+    preservedHistory = "t".repeat(x) + "f".repeat(y)
+}
+
 for (let i = 0; i < preservedHistory.length; i++) {
     counterHistory.push(preservedHistory[i] == "t")
     if (preservedHistory[i] == "t") {
